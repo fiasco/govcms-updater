@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 updater_dir=`dirname $0`;
 
