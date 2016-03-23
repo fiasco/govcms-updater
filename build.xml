@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="govcms-updater" default="project:build" description="govCMS Updater">
+
+<!-- The default branch name in the repository -->
+<property name="build.git.default" value="master" />
+ <!--
+    What version of govCMS should be used. This can be overriden
+    when called by Phing:
+      $ phing build -Dbuild.git.ref=7.x-2.0-beta10
+  -->
+ <property name="build.git.ref" value="${build.git.default}" override="true" />
+
+ <!-- Git URL for govCMS project -->
+ <property name="build.git.url" value="https://github.com/govCMS/govCMS.git" />
+
+ <!-- Where govCMS will be compiled -->
+ <property name="build.dir" value="build" />
+
+ <!-- Where the local usage of govCMS is -->
+ <property name="docroot.dir" value="../docroot" override="true" />
+
+ <!-- govCMS import hooks to run scripts as apart of this build process -->
+ <property name="hooks.pre-build" value="hooks/pre-import.sh" />
+ <property name="hooks.post-build" value="hooks/post-import.sh" />
+
+ <target name="debug">
+   <exec command="ls ${docroot.dir}"
+                  logoutput="true"
+                  passthru="true"
+                  checkreturn="true" />
+ </target>
+
+ <target name="project:build"
+         depends="clean,govcms:download,govcms:composer-install,govcms:build,project:import-govcms" />
+
+ <!-- Clean the build space in preperation for a new build. -->
+ <target name="clean">
+  <delete dir="${build.dir}" />
+ </target>
+
+ <!-- Download govCMS -->
+ <target name="govcms:download">
+   <gitclone repository="${build.git.url}" targetPath="${build.dir}" depth="100" />
+   <if>
+     <not><equals arg1="${build.git.ref}" arg2="${build.git.default}" /></not>
+     <then>
+       <gitcheckout repository="${build.dir}" branchname="${build.git.ref}" startpoint="${build.git.ref}" create="true" />
+     </then>
+   </if>
+ </target>
+
+<!-- Composer manages a lot of dependancies for govCMS which need to be installed first -->
+ <target name="govcms:composer-install">
+   <exec command="composer install --prefer-dist --working-dir=build"
+                  dir="${build.dir}"
+                  logoutput="true"
+                  passthru="true"
+                  checkreturn="true" />
+ </target>
+
+ <!-- Trigger the govCMS build process -->
+ <target name="govcms:build">
+   <!-- This is a little bit like Inception: Calling Phing from within Phing -->
+   <exec command="./build/bin/phing -f build/phing/build.xml build"
+                  dir="${build.dir}"
+                  logoutput="true"
+                  passthru="true"
+                  checkreturn="true" />
+ </target>
+
+ <!-- Take the compiled version of govCMS and use it -->
+ <target name="project:import-govcms">
+   <!--
+    In new projects docroot won't exist yet so we don't want to execute actions
+    on things that don't exists yet.
+  -->
+   <available file="${docroot.dir}" type="dir" property="docroot.exists" />
+
+   <!--
+      If these hooks files are present then we can run then as apart of the
+      import process
+    -->
+   <available file="${hooks.pre-build}" type="file" property="hooks.run.pre-build" />
+   <available file="${hooks.post-build}" type="file" property="hooks.run.post-build" />
+
+   <!-- Pre-Built Hook: hooks/pre-import.sh -->
+   <if>
+      <isset property="hooks.run.pre-build"/>
+      <then>
+        <exec command=". ${hooks.pre-build}"
+          logoutput="true"
+          passthru="true"
+          checkreturn="true" />
+      </then>
+   </if>
+
+   <delete file="${build.dir}/docroot/sites" />
+   <if>
+      <isset property="docroot.exists"/>
+      <then>
+        <copy todir="${build.dir}/docroot/sites">
+          <fileset dir="${docroot.dir}/sites">
+             <include name="**" />
+          </fileset>
+        </copy>
+        <delete dir="${docroot.dir}" />
+      </then>
+   </if>
+   <copy todir="${docroot.dir}">
+     <fileset dir="${build.dir}/docroot">
+        <include name="**" />
+     </fileset>
+   </copy>
+
+   <!-- create sites directory if it doesn't exist yet. -->
+   <available file="${docroot.dir}/sites" type="dir" property="sites.exists" />
+   <if>
+      <not><isset property="sites.exists"/></not>
+      <then>
+        <mkdir dir="${docroot.dir}/sites" />
+        <mkdir dir="${docroot.dir}/sites/default" />
+        <exec command="wget https://raw.githubusercontent.com/drupal/drupal/7.x/sites/default/default.settings.php"
+                       dir="${docroot.dir}/sites/default"
+                       logoutput="true"
+                       passthru="true"
+                       checkreturn="true" />
+        <mkdir dir="${docroot.dir}/sites/default/files" />
+        <mkdir dir="${docroot.dir}/sites/all" />
+        <mkdir dir="${docroot.dir}/sites/all/modules" />
+        <mkdir dir="${docroot.dir}/sites/all/themes" />
+      </then>
+  </if>
+
+  <!-- Post-Built Hook: hooks/post-import.sh -->
+   <if>
+      <isset property="hooks.run.post-build"/>
+      <then>
+        <exec command=". ${hooks.post-build}"
+          logoutput="true"
+          passthru="true"
+          checkreturn="true" />
+      </then>
+   </if>
+ </target>
+</project>

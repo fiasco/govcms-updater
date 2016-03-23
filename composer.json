@@ -1,0 +1,6 @@
+{
+     "require-dev": {
+         "phing/phing": "2.*",
+         "pear/versioncontrol_git": "@dev"
+     }
+}
