@@ -100,7 +100,7 @@
       <isset property="docroot.exists"/>
       <then>
         <copy todir="${build.dir}/docroot/sites">
-          <fileset dir="${docroot.dir}/sites">
+          <fileset dir="${docroot.dir}/sites" defaultexcludes="false">
              <include name="**" />
           </fileset>
         </copy>
@@ -108,7 +108,7 @@
       </then>
    </if>
    <copy todir="${docroot.dir}">
-     <fileset dir="${build.dir}/docroot">
+     <fileset dir="${build.dir}/docroot" defaultexcludes="false">
         <include name="**" />
      </fileset>
    </copy>
