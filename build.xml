@@ -11,7 +11,7 @@
  <property name="build.git.ref" value="${build.git.default}" override="true" />
 
  <!-- Git URL for govCMS project -->
- <property name="build.git.url" value="https://github.com/govCMS/govCMS.git" />
+ <property name="build.git.url" value="https://github.com/govCMS/govCMS.git" override="true" />
 
  <!-- Where govCMS will be compiled -->
  <property name="build.dir" value="build" />
