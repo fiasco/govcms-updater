@@ -19,6 +19,9 @@
  <!-- Where the local usage of govCMS is -->
  <property name="docroot.dir" value="../docroot" override="true" />
 
+ <!-- Project Git root (if tracking in Git) -->
+ <property name="project.dir" value="../" override="true" />
+
  <!-- govCMS import hooks to run scripts as apart of this build process -->
  <property name="hooks.pre-build" value="hooks/pre-import.sh" />
  <property name="hooks.post-build" value="hooks/post-import.sh" />
@@ -142,5 +145,16 @@
           checkreturn="true" />
       </then>
    </if>
+ </target>
+
+ <!-- Commit compiled changes to git. -->
+ <target name="project:commit">
+   <exec command="git add -A"
+     logoutput="true"
+     passthru="true"
+     checkreturn="true" />
+   <gitcommit
+       repository="${project.dir}"
+       message="govCMS Updater Run to update govCMS" allFiles="true" />
  </target>
 </project>
