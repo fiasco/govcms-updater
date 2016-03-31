@@ -26,13 +26,6 @@
  <property name="hooks.pre-build" value="hooks/pre-import.sh" />
  <property name="hooks.post-build" value="hooks/post-import.sh" />
 
- <target name="debug">
-   <exec command="ls ${docroot.dir}"
-                  logoutput="true"
-                  passthru="true"
-                  checkreturn="true" />
- </target>
-
  <target name="project:build"
          depends="clean,govcms:download,govcms:composer-install,govcms:build,project:import-govcms" />
 
