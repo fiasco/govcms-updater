@@ -2,7 +2,7 @@
 <project name="govcms-updater" default="project:build" description="govCMS Updater">
 
 <!-- The default branch name in the repository -->
-<property name="build.git.default" value="master" />
+<property name="build.git.default" value="7.x-2.x" />
  <!--
     What version of govCMS should be used. This can be overriden
     when called by Phing:
