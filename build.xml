@@ -23,8 +23,8 @@
  <property name="project.dir" value="../" override="true" />
 
  <!-- govCMS import hooks to run scripts as apart of this build process -->
- <property name="hooks.pre-build" value="hooks/pre-import.sh" />
- <property name="hooks.post-build" value="hooks/post-import.sh" />
+ <property name="hooks.pre-build" value="hooks/pre-import.sh" override="true" />
+ <property name="hooks.post-build" value="hooks/post-import.sh" override="true" />
 
  <target name="project:build"
          depends="clean,govcms:download,govcms:composer-install,govcms:build,project:import-govcms" />
