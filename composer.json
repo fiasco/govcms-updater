@@ -8,6 +8,6 @@
       {"name": "Josh Waihi", "email": "joshwaihi@gmail.com"}
   ],
    "require": {
-       "phing/phing": "^2.16.0",
+       "phing/phing": "^2.16.0"
    }
 }
