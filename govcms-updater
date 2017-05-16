@@ -1,0 +1,29 @@
+#!/bin/bash -x
+
+real_filepath=`php -r "echo realpath('$0');"`
+
+updater_dir=`dirname $real_filepath`;
+
+opts='';
+if [ "$1" != "" ]; then
+  opts="-Dbuild.git.ref=$1";
+fi
+
+vendor_root="$updater_dir"
+
+i="0"
+while [ ! -d "$vendor_root/vendor" ]; do
+  vendor_root="$vendor_root/.."
+  i=$[$i+1]
+  if [ $i -gt 4 ]; then
+    break
+  fi
+done
+
+
+if [ ! -d "$vendor_root/vendor" ]; then
+  echo "Error: Could not find vendor directory. Has composer install been run?"
+  exit 2;
+fi
+
+${vendor_root}/vendor/bin/phing -f ${updater_dir}/build.xml project:build $opts

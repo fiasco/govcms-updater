@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="govcms-updater" default="project:build" description="govCMS Updater">
+<project name="govcms-updater" default="project:build" description="govCMS Updater" basedir=".">
 
 <!-- The default branch name in the repository -->
 <property name="build.git.default" value="7.x-2.x" />
@@ -14,20 +14,20 @@
  <property name="build.git.url" value="https://github.com/govCMS/govCMS.git" override="true" />
 
  <!-- Where govCMS will be compiled -->
- <property name="build.dir" value="build" />
+ <property name="build.dir" value="_build" />
 
  <!-- Where the local usage of govCMS is -->
- <property name="docroot.dir" value="../docroot" override="true" />
+ <property name="docroot.dir" value="docroot" override="true" />
 
  <!-- Project Git root (if tracking in Git) -->
- <property name="project.dir" value="../" override="true" />
+ <property name="project.dir" value="." override="true" />
 
  <!-- govCMS import hooks to run scripts as apart of this build process -->
  <property name="hooks.pre-build" value="hooks/pre-import.sh" override="true" />
  <property name="hooks.post-build" value="hooks/post-import.sh" override="true" />
 
  <target name="project:build"
-         depends="clean,govcms:download,govcms:composer-install,govcms:build,project:import-govcms" />
+         depends="clean,govcms:download,govcms:composer-install,govcms:build,project:import-govcms,clean" />
 
  <!-- Clean the build space in preperation for a new build. -->
  <target name="clean">
