@@ -1,6 +1,14 @@
 {
-     "require-dev": {
-         "phing/phing": "2.*",
-         "pear/versioncontrol_git": "@dev"
-     }
+  "name": "fiasco/govcms-updater",
+  "type": "library",
+  "description": "Updating tool for govCMS",
+  "keywords": ["drupal", "govcms"],
+  "license": "GPL-3.0",
+  "authors": [
+      {"name": "Josh Waihi", "email": "joshwaihi@gmail.com"}
+  ],
+   "require": {
+       "phing/phing": "2.*",
+       "pear/versioncontrol_git": "@dev"
+   }
 }
