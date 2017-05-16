@@ -136,15 +136,4 @@
       </then>
    </if>
  </target>
-
- <!-- Commit compiled changes to git. -->
- <target name="project:commit">
-   <exec command="git add -A"
-     logoutput="true"
-     passthru="true"
-     checkreturn="true" />
-   <gitcommit
-       repository="${project.dir}"
-       message="govCMS Updater Run to update govCMS" allFiles="true" />
- </target>
 </project>

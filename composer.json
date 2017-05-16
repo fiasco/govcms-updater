@@ -8,7 +8,6 @@
       {"name": "Josh Waihi", "email": "joshwaihi@gmail.com"}
   ],
    "require": {
-       "phing/phing": "2.*",
-       "pear/versioncontrol_git": "@dev"
+       "phing/phing": "^2.16.0",
    }
 }
